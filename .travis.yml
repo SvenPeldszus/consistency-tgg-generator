@@ -1,5 +1,7 @@
 language: java
 dist: bionic
+services:
+  - xvfb
 sudo: false
 git:
   depth: false
