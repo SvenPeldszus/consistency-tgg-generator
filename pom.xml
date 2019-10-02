@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.peldszus.consistency.tgg.gen</groupId>
+  <artifactId>consistency-tgg-generator</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+    <tycho-version>1.4.0</tycho-version>
+    <jacoco.version>0.8.4</jacoco.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    
+    <jacoco.aggregate.reportPaths>${maven.multiModuleProjectDirectory}/de.peldszus.consistency.tgg.gen.coverage/target/jacoco-aggregate/</jacoco.aggregate.reportPaths>
+   
+    <sonar.language>java</sonar.language>
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.coverage.jacoco.xmlReportPaths>${jacoco.aggregate.reportPaths}/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.junit.reportPaths>${maven.multiModuleProjectDirectory}/target/surefire-reports</sonar.junit.reportPaths>
+  </properties>
+	
+  <modules>
+    <module>de.peldszus.consistency.tgg.gen.coverage</module>
+    <module>bundles/de.peldszus.consistency.tgg.gen</module>
+    <module>bundles/de.peldszus.consistency.tgg.gen.ui</module>
+    <module>tests/de.peldszus.consistency.tgg.gen.tests</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <pomDependencies>consider</pomDependencies>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+         <executions>
+           <execution>
+             <id>pre-integration-test</id>
+             <goals>
+               <goal>prepare-agent-integration</goal>
+             </goals>
+             <configuration>
+               <propertyName>surefireArgLine</propertyName>
+             </configuration>
+           </execution>
+           <execution>
+             <id>post-integration-test</id>
+             <phase>post-integration-test</phase>
+             <goals>
+               <goal>report-integration</goal>
+             </goals>
+           </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-surefire-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <reportsDirectory>${sonar.junit.reportPaths}</reportsDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <environments>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>Eclipse Latest</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/latest</url>
+    </repository>
+    <repository>
+      <id>EMF</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/modeling/emf/updates/releases/</url>
+    </repository>
+    <repository>
+      <id>EMF Facets</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/facet/updates/release/</url>
+    </repository>
+    <repository>
+      <id>eMoflon IBEX</id>
+      <layout>p2</layout>
+      <url>https://emoflon.org/emoflon-ibex-democles-updatesite/snapshot/updatesite/</url>
+    </repository>
+    <repository>
+      <id>eMoflon Core</id>
+      <layout>p2</layout>
+      <url>https://emoflon.org/emoflon-core-updatesite/snapshot/updatesite/</url>
+    </repository>
+    <repository>
+      <id>eMoflon Democles</id>
+      <layout>p2</layout>
+      <url>http://gervarro.org/democles/integration-0.5.0/</url>
+    </repository>
+    <repository>
+      <id>eMoflon Democles Advanced</id>
+      <layout>p2</layout>
+      <url>http://gervarro.org/democles/advanced/integration-0.5.0/</url>
+    </repository>
+    <repository>
+      <id>Henshin</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/modeling/emft/henshin/updates/nightly</url>
+    </repository>
+    <repository>
+      <id>plantuml</id>
+      <layout>p2</layout>
+      <url>http://hallvard.github.io/plantuml</url>
+    </repository>
+    <repository>
+      <id>GRaViTY</id>
+      <layout>p2</layout>
+      <url>https://gravity-tool.org/updatesite/</url>
+    </repository>
+  </repositories>
+</project>

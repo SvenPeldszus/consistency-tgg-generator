@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consistency TGG Generator UI
+Bundle-SymbolicName: de.peldszus.consistency.tgg.gen.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.peldszus.consistency.tgg.gen.ui.Activator
+Bundle-Vendor: Sven Peldszus
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.emf.ecore,
+ de.peldszus.consistency.tgg.gen,
+ org.gravity.eclipse,
+ org.eclipse.core.commands;visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: de.peldszus.consistency.tgg.gen.ui
+Bundle-ActivationPolicy: lazy
+Export-Package: de.peldszus.consistency.tgg.gen.ui;x-internal:=true

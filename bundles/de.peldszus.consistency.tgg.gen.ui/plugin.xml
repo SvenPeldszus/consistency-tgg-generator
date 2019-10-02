@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="de.peldszus.consistency.tgg.gen.ui.ProjectCreationHandler"
+            description="Generates an eMoflon TGG project for the selected ecore files"
+            id="de.peldszus.consistency.tgg.gen.ui.command.workspace.selection"
+            name="Genereate Consistency TGG">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+         <command
+               commandId="de.peldszus.consistency.tgg.gen.ui.command.workspace.selection"
+               label="Generate Consistency TGG"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

@@ -1,0 +1,5 @@
+-------------------------------------------------------------------------------
+Test set: de.peldszus.consistency.tgg.gen.tests.GenTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.525 s - in de.peldszus.consistency.tgg.gen.tests.GenTest
+testPlatformResource{URL}[1]  Time elapsed: 22.313 s

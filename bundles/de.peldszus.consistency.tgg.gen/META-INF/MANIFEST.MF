@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Consistency TGG Generator
+Bundle-SymbolicName: de.peldszus.consistency.tgg.gen;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: de.peldszus.consistency.tgg.gen
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.core.resources,
+ org.emoflon.ibex.tgg.ide,
+ org.eclipse.ocl.xtext.base,
+ org.emoflon.ibex.tgg.editor,
+ org.gravity.eclipse,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.ui
+Bundle-Vendor: Sven Peldszus
+Export-Package: de.peldszus.consistency.tgg.gen,
+ de.peldszus.consistency.tgg.gen.create;x-internal:=true,
+ de.peldszus.consistency.tgg.gen.handle;x-internal:=true
+Bundle-Activator: de.peldszus.consistency.tgg.gen.Activator
+Bundle-ActivationPolicy: lazy
