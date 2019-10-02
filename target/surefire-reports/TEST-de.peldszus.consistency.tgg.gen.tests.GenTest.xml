@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="de.peldszus.consistency.tgg.gen.tests.GenTest" time="22.525" tests="1" errors="0" skipped="0" failures="0">
-  <properties/>
-  <testcase name="testPlatformResource{URL}[1]" classname="de.peldszus.consistency.tgg.gen.tests.GenTest" time="22.313"/>
-</testsuite>
