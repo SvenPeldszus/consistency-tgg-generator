@@ -62,17 +62,19 @@ public class ResourceContentHandler {
 	 * @return The ResourceSet
 	 */
 	private XtextResourceSet initResourceSet(Collection<EPackage> ePackages) {
-		final Set<EPackage> allEPackages = getAllEPackages(ePackages);
+		final Set<EPackage> allEPackagesTmp = getAllEPackages(ePackages);
 		final XtextResourceSet set = new XtextResourceSet();
 		final Registry registry = set.getPackageRegistry();
-		final Set<URI> uris = new HashSet<>(allEPackages.size());
-		for (final EPackage ePackage : allEPackages) {
+		final Set<URI> uris = new HashSet<>(allEPackagesTmp.size());
+		for (final EPackage ePackage : allEPackagesTmp) {
 			final Resource eResource = ePackage.eResource();
 			final URI uri = eResource.getURI();
 			uris.add(uri);
 			registry.put(uri.toString(), ePackage);
 			registry.put(ePackage.getNsURI(), ePackage);
-			registry.put(this.uriMap.get(ePackage).toString(), ePackage);
+			if(this.uriMap.containsKey(ePackage)) {
+				registry.put(this.uriMap.get(ePackage).toString(), ePackage);
+			}
 		}
 		EcoreUtil.resolveAll(set);
 		for (final URI uri : uris) {
@@ -203,21 +205,21 @@ public class ResourceContentHandler {
 	 * @return The referenced EPackages
 	 */
 	public Set<EPackage> getAllEPackages(final EPackage ePackage, final EClass eClassifier) {
-		final Set<EPackage> allEPackages = new HashSet<>();
+		final Set<EPackage> ePackages = new HashSet<>();
 		for (final EReference eReference : eClassifier.getEReferences()) {
 			final EClass trgEClass = eReference.getEReferenceType();
 			if (trgEClass.eIsProxy()) {
 				final EPackage resolvedEPackage = resolveEPackage(ePackage, trgEClass);
 				eReference.setEType((EClassifier) EcoreUtil.resolve(trgEClass, resolvedEPackage));
-				allEPackages.add(resolvedEPackage);
+				ePackages.add(resolvedEPackage);
 			} else {
 				final EPackage trgEPackage = trgEClass.getEPackage();
 				if (EcorePackage.eINSTANCE != trgEPackage) {
-					allEPackages.add(trgEPackage);
+					ePackages.add(trgEPackage);
 				}
 			}
 		}
-		return allEPackages;
+		return ePackages;
 	}
 
 	/**

@@ -18,7 +18,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="b" eType="#//AbstractType"
         eOpposite="#//AbstractType/a"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InterfaceImplementation" eSuperTypes="#//Interface"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceImplementation" eSuperTypes="#//Interface">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="proxyReference" eType="ecore:EClass http://www.example.org/installed#//Lib"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Data">
     <eLiterals name="A"/>
     <eLiterals name="B"/>
