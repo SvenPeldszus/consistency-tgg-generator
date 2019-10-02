@@ -4,7 +4,6 @@
 package de.peldszus.consistency.tgg.gen.create;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -34,6 +33,8 @@ import org.moflon.tgg.mosl.tgg.TripleGraphGrammarFile;
 import de.peldszus.consistency.tgg.gen.Activator;
 
 /**
+ * Functionalities for creating a new Eclipse project with the eMoflon default libraries
+ *
  * @author speldszus
  *
  */
@@ -43,10 +44,25 @@ public class EclipseProjectCreator {
 	private final ResourceSet resourceSet;
 	private Set<AttrCondDef> attrConds;
 
+	/**
+	 * Initializes the project creator
+	 *
+	 * @param resourceSet The resource set conteining the meta models
+	 */
 	public EclipseProjectCreator(ResourceSet resourceSet) {
 		this.resourceSet = resourceSet;
 	}
 
+	/**
+	 * Creates a new TGG Eclipse project with the given name
+	 *
+	 * @param name The name of the project
+	 * @param monitor A progress monitor
+	 * @return The created project
+	 * @throws DuplicateProjectNameException If a project with this name already exists
+	 * @throws CoreException If reading or writing the attribute conditions or adding a nature failed
+	 * @throws IOException If reading or writing the attribute conditions failed
+	 */
 	public IProject createTGGProject(String name, IProgressMonitor monitor)
 			throws DuplicateProjectNameException, CoreException, IOException {
 		this.project = EclipseProjectUtil.createProject(name, monitor);
@@ -59,22 +75,31 @@ public class EclipseProjectCreator {
 		return this.project;
 	}
 
+	/**
+	 * All attribute condition definitions managed by this class
+	 *
+	 * @return a set containing the definitions
+	 */
 	public Set<AttrCondDef> getAttrConds() {
 		return this.attrConds;
 	}
 
+	/**
+	 * The created project
+	 *
+	 * @return the project
+	 */
 	public IProject getProject() {
 		return this.project;
 	}
 
 	/**
-	 * @return
-	 * @throws CoreException
-	 * @throws IOException
-	 * @throws FileNotFoundException
+	 * @return A set containing the default eMoflon attribute condition definitions
+	 * @throws CoreException If searing the project failed
+	 * @throws IOException If reading the definitions from the file system failed
 	 */
 	private Set<AttrCondDef> getDefaultAttributeConditions()
-			throws CoreException, IOException, FileNotFoundException {
+			throws CoreException, IOException {
 		final ExtensionFileVisitor visitor = new ExtensionFileVisitor("tgg");
 		this.project.accept(visitor);
 		final List<Path> files = visitor.getFiles();
@@ -93,6 +118,11 @@ public class EclipseProjectCreator {
 		return new HashSet<>(attributeCondDefs);
 	}
 
+	/**
+	 * Adds additional definitions to the set of definitions
+	 *
+	 * @param defs The definitions to add
+	 */
 	public void addMoreAttrConds(Collection<AttrCondDef> defs) {
 		this.attrConds.addAll(defs);
 	}

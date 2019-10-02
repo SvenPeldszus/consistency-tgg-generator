@@ -18,7 +18,6 @@ import org.moflon.tgg.mosl.tgg.Schema;
 import de.peldszus.consistency.tgg.gen.create.EclipseProjectCreator;
 import de.peldszus.consistency.tgg.gen.create.RuleCreator;
 import de.peldszus.consistency.tgg.gen.create.SchemaCreator;
-import de.peldszus.consistency.tgg.gen.handle.ConainerHandler;
 import de.peldszus.consistency.tgg.gen.handle.CorrespondenceHandler;
 import de.peldszus.consistency.tgg.gen.handle.ResourceContentHandler;
 
@@ -29,7 +28,6 @@ import de.peldszus.consistency.tgg.gen.handle.ResourceContentHandler;
  */
 public class TGGProjectCreator {
 
-	private ConainerHandler containers;
 	private IProject project;
 
 	/**
@@ -47,28 +45,25 @@ public class TGGProjectCreator {
 		final ResourceContentHandler packageElements = new ResourceContentHandler(ePackages);
 		final EclipseProjectCreator projectCreator = new EclipseProjectCreator(packageElements.getResourceSet());
 		this.project = projectCreator.createTGGProject(name, monitor);
-		create(projectCreator, packageElements, name);
+		create(projectCreator, packageElements);
 	}
 
 	/**
+	 * Generated all required TGG files
 	 *
-	 * @param projectCreator
-	 * @param ePackages
-	 * @param name
-	 * @return
-	 * @throws IOException
+	 * @param projectCreator The creator used to create the Eclipse project
+	 * @param packageElements The handler used to discover all required elements
+	 * @throws IOException If serializing a rule failed
 	 */
-	private boolean create(EclipseProjectCreator projectCreator, ResourceContentHandler packageElements, String name) throws IOException {
+	private void create(EclipseProjectCreator projectCreator, ResourceContentHandler packageElements) throws IOException  {
 		final Set<EClass> allEClasses = packageElements.getAllEClasses();
 		final XtextResourceSet resourceSet = packageElements.getResourceSet();
 		final CorrespondenceHandler correspondences = new CorrespondenceHandler(allEClasses);
-		final Schema schema = new SchemaCreator(this.project, resourceSet).createSchema(name,
+		final Schema schema = new SchemaCreator(this.project, resourceSet).createSchema(this.project.getName(),
 				packageElements.getAllEPackages(), packageElements.getAllEDataTypes(), new HashSet<>(correspondences.allCorrespondences()));
 		projectCreator.addMoreAttrConds(schema.getAttributeCondDefs());
 
-		this.containers = new ConainerHandler(allEClasses);
-
-		final RuleCreator ruleCreator = new RuleCreator(resourceSet, this.containers, correspondences, projectCreator);
+		final RuleCreator ruleCreator = new RuleCreator(packageElements, correspondences, projectCreator);
 		for (final EClass eClass : allEClasses) {
 			if (eClass.isAbstract() || eClass.isInterface()) {
 				continue;
@@ -87,6 +82,5 @@ public class TGGProjectCreator {
 				}
 			}
 		}
-		return true;
 	}
 }

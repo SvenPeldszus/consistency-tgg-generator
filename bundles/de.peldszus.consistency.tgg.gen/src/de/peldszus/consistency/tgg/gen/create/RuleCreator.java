@@ -34,6 +34,7 @@ import org.moflon.tgg.mosl.tgg.Using;
 
 import de.peldszus.consistency.tgg.gen.handle.ConainerHandler;
 import de.peldszus.consistency.tgg.gen.handle.CorrespondenceHandler;
+import de.peldszus.consistency.tgg.gen.handle.ResourceContentHandler;
 
 /**
  * Functionalities for creating new TGG rules
@@ -61,13 +62,14 @@ public class RuleCreator {
 	 * @param projectCreator  The creator used for creating the Eclipse project into
 	 *                        which the rules should be inserted
 	 */
-	public RuleCreator(ResourceSet resourceSet, ConainerHandler containers, CorrespondenceHandler correspondences,
+	public RuleCreator(ResourceContentHandler packageElements, CorrespondenceHandler correspondences,
 			EclipseProjectCreator projectCreator) {
 		this.attrConds = new AttributeConditionCreator(projectCreator.getAttrConds());
-		this.resourceSet = resourceSet;
+		this.resourceSet = packageElements.getResourceSet();
 		this.correspondences = correspondences;
 		this.project = projectCreator.getProject();
-		this.containers = containers;
+		this.containers = new ConainerHandler(packageElements.getAllEClasses());
+
 	}
 
 	/**

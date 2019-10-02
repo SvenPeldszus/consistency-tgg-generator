@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -46,7 +47,7 @@ public class ResourceContentHandler {
 	public ResourceContentHandler(Collection<EPackage> ePackages) {
 		this.uriMap = new HashMap<>();
 		this.allEPackages = new HashSet<>();
-		this.resourceSet = initResourceSet(getAllEPackages(ePackages));
+		this.resourceSet = initResourceSet(ePackages);
 		this.allEClasses = new HashSet<>();
 		this.allEReferences = new HashSet<>();
 		this.allEDataTypes = new HashSet<>();
@@ -56,15 +57,16 @@ public class ResourceContentHandler {
 	/**
 	 * Initializes an XtextResourceSet
 	 *
-	 * @param ePackages
+	 * @param ePackages The EPackages to add to the resource set
 	 *
 	 * @return The ResourceSet
 	 */
-	private XtextResourceSet initResourceSet(Set<EPackage> ePackages) {
-		final XtextResourceSet resourceSet = new XtextResourceSet();
-		final Registry registry = resourceSet.getPackageRegistry();
-		final Set<URI> uris = new HashSet<>(ePackages.size());
-		for (final EPackage ePackage : ePackages) {
+	private XtextResourceSet initResourceSet(Collection<EPackage> ePackages) {
+		final Set<EPackage> allEPackages = getAllEPackages(ePackages);
+		final XtextResourceSet set = new XtextResourceSet();
+		final Registry registry = set.getPackageRegistry();
+		final Set<URI> uris = new HashSet<>(allEPackages.size());
+		for (final EPackage ePackage : allEPackages) {
 			final Resource eResource = ePackage.eResource();
 			final URI uri = eResource.getURI();
 			uris.add(uri);
@@ -72,11 +74,11 @@ public class ResourceContentHandler {
 			registry.put(ePackage.getNsURI(), ePackage);
 			registry.put(this.uriMap.get(ePackage).toString(), ePackage);
 		}
-		EcoreUtil.resolveAll(resourceSet);
+		EcoreUtil.resolveAll(set);
 		for (final URI uri : uris) {
-			this.allEPackages.add((EPackage) resourceSet.getResource(uri, true).getContents().get(0));
+			this.allEPackages.add((EPackage) set.getResource(uri, true).getContents().get(0));
 		}
-		return resourceSet;
+		return set;
 	}
 
 	/**
@@ -156,15 +158,15 @@ public class ResourceContentHandler {
 		if (proxy.eIsProxy()) {
 			final EPackage eResolvedPackage = (EPackage) resource.getContents().get(0);
 			String name = proxy.getName();
-			if(name == null) {
+			if (name == null) {
 				uri = ((BasicEObjectImpl) proxy).eProxyURI();
 				if (uri.hasFragment()) {
 					name = uri.fragment();
-					if(name.startsWith("//")) {
+					if (name.startsWith("//")) {
 						name = name.substring(2);
 					}
 					final EClass resolved = (EClass) eResolvedPackage.getEClassifier(name);
-					if(resolved != null) {
+					if (resolved != null) {
 						proxy = resolved;
 					}
 				}
@@ -184,25 +186,38 @@ public class ResourceContentHandler {
 		for (final EPackage ePackage : ePackages) {
 			EcoreUtil.resolveAll(ePackage);
 			this.uriMap.put(ePackage, ePackage.eResource().getURI());
-			for (final EClassifier eClassifier : ePackage.getEClassifiers()) {
-				if (eClassifier instanceof EClass) {
-					for (final EReference eReference : ((EClass) eClassifier).getEReferences()) {
-						final EClass trgEClass = eReference.getEReferenceType();
-						if (trgEClass.eIsProxy()) {
-							final EPackage resolvedEPackage = resolveEPackage(ePackage, trgEClass);
-							eReference.setEType((EClassifier) EcoreUtil.resolve(trgEClass, resolvedEPackage));
-							packages.add(resolvedEPackage);
-						} else {
-							final EPackage trgEPackage = trgEClass.getEPackage();
-							if (EcorePackage.eINSTANCE != trgEPackage) {
-								packages.add(trgEPackage);
-							}
-						}
-					}
+			final Set<EPackage> newPackages = ePackage.getEClassifiers().parallelStream()
+					.filter(eClassifier -> eClassifier instanceof EClass)
+					.flatMap(eClass -> getAllEPackages(ePackage, (EClass)eClass).parallelStream())
+					.collect(Collectors.toSet());
+			packages.addAll(newPackages);
+		}
+		return packages;
+	}
+
+	/**
+	 * Gets all EPackages referenced by the class
+	 *
+	 * @param ePackage The EPackage containing the class
+	 * @param eClassifier The class
+	 * @return The referenced EPackages
+	 */
+	public Set<EPackage> getAllEPackages(final EPackage ePackage, final EClass eClassifier) {
+		final Set<EPackage> allEPackages = new HashSet<>();
+		for (final EReference eReference : eClassifier.getEReferences()) {
+			final EClass trgEClass = eReference.getEReferenceType();
+			if (trgEClass.eIsProxy()) {
+				final EPackage resolvedEPackage = resolveEPackage(ePackage, trgEClass);
+				eReference.setEType((EClassifier) EcoreUtil.resolve(trgEClass, resolvedEPackage));
+				allEPackages.add(resolvedEPackage);
+			} else {
+				final EPackage trgEPackage = trgEClass.getEPackage();
+				if (EcorePackage.eINSTANCE != trgEPackage) {
+					allEPackages.add(trgEPackage);
 				}
 			}
 		}
-		return packages;
+		return allEPackages;
 	}
 
 	/**
@@ -241,6 +256,7 @@ public class ResourceContentHandler {
 
 	/**
 	 * A getter for the xtext resource set
+	 *
 	 * @return the resource set
 	 */
 	public XtextResourceSet getResourceSet() {

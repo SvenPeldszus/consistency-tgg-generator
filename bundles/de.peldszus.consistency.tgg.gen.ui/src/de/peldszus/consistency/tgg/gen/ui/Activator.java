@@ -15,12 +15,6 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	static final String FILEEXTENSION_ECORE = "ecore";
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {

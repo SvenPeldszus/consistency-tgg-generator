@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,7 +42,7 @@ public class GenTest {
 
 	private final Collection<IProject> projects = new LinkedList<>();
 
-	public static Collection<URL> collectMetaModels() throws URISyntaxException, MalformedURLException {
+	public static Collection<URL> collectMetaModels() {
 		final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
 		final Enumeration<URL> entries = bundle.findEntries("data", "*.ecore", false);
 		final Collection<URL> files = new LinkedList<>();
@@ -75,16 +73,17 @@ public class GenTest {
 	}
 
 	/**
-	 * @param tggProjectName
-	 * @param monitor
-	 * @throws CoreException
+	 * Deletes the project with the given name id existing
+	 *
+	 * @param tggProjectName The name
+	 * @param monitor A progress monitor
+	 * @throws CoreException if this method fails
 	 */
 	public void deleteProject(String tggProjectName, final NullProgressMonitor monitor) throws CoreException {
-		IProject tggProject = EclipseProjectUtil.getProjectByName(tggProjectName);
+		final IProject tggProject = EclipseProjectUtil.getProjectByName(tggProjectName);
 		if(tggProject.exists()) {
 			tggProject.delete(true, monitor);
 		}
-		tggProject = null;
 	}
 
 	@AfterEach
