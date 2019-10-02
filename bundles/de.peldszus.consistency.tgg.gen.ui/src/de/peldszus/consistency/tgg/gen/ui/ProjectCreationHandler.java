@@ -113,7 +113,6 @@ public class ProjectCreationHandler extends AbstractHandler {
 			new TGGProjectCreator().createTGGProject(ePackages, projectName, monitor);
 		} catch (DuplicateProjectNameException | CoreException | IOException e) {
 			LOGGER.error("Creation of a TGG project failed.", e);
-			e.printStackTrace();
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Creation of a TGG project failed.", e);
 		}
 		return Status.OK_STATUS;

@@ -8,10 +8,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="containedInterface" eType="#//Interface"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractType" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractType" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="data" eType="#//Data"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Interface" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Child" eSuperTypes="#//AbstractType"/>
   <eClassifiers xsi:type="ecore:EClass" name="InterfaceImplementation" eSuperTypes="#//Interface"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="Data">
+    <eLiterals name="A"/>
+    <eLiterals name="B"/>
+  </eClassifiers>
   <eSubpackages name="subpackage" nsURI="http://www.example.org/metamodel/subpackage"
       nsPrefix="metamodel/subpackage"/>
 </ecore:EPackage>

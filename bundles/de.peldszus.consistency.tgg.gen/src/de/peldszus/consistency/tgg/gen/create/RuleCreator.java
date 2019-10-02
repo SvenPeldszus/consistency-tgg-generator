@@ -147,11 +147,7 @@ public class RuleCreator {
 				.collect(Collectors.toMap(file -> file, file -> file.eResource()));
 		ruleResource.getContents().addAll(attrMap.keySet());
 
-		try {
-			ruleResource.save(Collections.emptyMap());
-		} catch (final RuntimeException e) {
-			e.printStackTrace();
-		}
+		ruleResource.save(Collections.emptyMap());
 		schemaMap.entrySet().parallelStream().forEach(entry -> entry.getValue().getContents().add(entry.getKey()));
 		attrMap.entrySet().parallelStream().forEach(entry -> entry.getValue().getContents().add(entry.getKey()));
 	}
