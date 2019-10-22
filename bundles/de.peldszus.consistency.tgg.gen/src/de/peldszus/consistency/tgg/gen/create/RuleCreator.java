@@ -76,8 +76,8 @@ public class RuleCreator {
 	 * Creates a new rule in the given TGG file for the translation of a single type
 	 *
 	 * @param ruleName   The name of the new rule
-	 * @param schema     The schem containing the correspondence types
-	 * @param ruleFile   The rule file into which the rule should be insterted
+	 * @param schema     The schema containing the correspondence types
+	 * @param ruleFile   The rule file into which the rule should be inserted
 	 * @param createType The type to translate
 	 * @return The created rule
 	 */
@@ -91,8 +91,7 @@ public class RuleCreator {
 
 		final ObjectVariablePattern source = corr.getSource();
 		final ObjectVariablePattern target = corr.getTarget();
-		final EList<AttrCond> attrConditions = rule.getAttrConditions();
-		attrConditions.addAll(createType.getEAllAttributes().parallelStream().map(eAttribute -> {
+		final List<AttrCond> attrConditions = createType.getEAllAttributes().parallelStream().map(eAttribute -> {
 			final AttrCondDef attrCond = this.attrConds.findEqualsConditionForType(eAttribute.getEAttributeType());
 			final AttrCond condition = TggFactory.eINSTANCE.createAttrCond();
 			final EList<ParamValue> parameters = condition.getValues();
@@ -101,7 +100,8 @@ public class RuleCreator {
 
 			condition.setName(attrCond);
 			return condition;
-		}).collect(Collectors.toList()));
+		}).collect(Collectors.toList());
+		rule.getAttrConditions().addAll(attrConditions);
 		return rule;
 	}
 

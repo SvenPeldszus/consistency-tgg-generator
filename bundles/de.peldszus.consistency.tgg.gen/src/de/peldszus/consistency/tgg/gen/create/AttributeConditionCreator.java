@@ -27,11 +27,25 @@ public class AttributeConditionCreator {
 		def.setUserDefined(true);
 		def.getParams().add(createNewParam(eAttribute, "a"));
 		def.getParams().add(createNewParam(eAttribute, "b"));
-		final Adornment adornment = TggFactory.eINSTANCE.createAdornment();
-		adornment.getValue().add("F");
-		adornment.getValue().add("F");
-		def.getAllowedSyncAdornments().add(adornment);
+		def.getAllowedSyncAdornments().add(createAdornment("F", "F"));
+		def.getAllowedSyncAdornments().add(createAdornment("F", "B"));
+		def.getAllowedSyncAdornments().add(createAdornment("B", "F"));
+		def.getAllowedSyncAdornments().add(createAdornment("B", "B"));
 		return def;
+	}
+
+	/**
+	 * Creates a new adornment
+	 *
+	 * @param a The binding of the first parameter
+	 * @param b The binding of the second parameter
+	 * @return The adornment
+	 */
+	public static Adornment createAdornment(String a, String b) {
+		final Adornment adornment = TggFactory.eINSTANCE.createAdornment();
+		adornment.getValue().add(a);
+		adornment.getValue().add(b);
+		return adornment;
 	}
 
 	/**
