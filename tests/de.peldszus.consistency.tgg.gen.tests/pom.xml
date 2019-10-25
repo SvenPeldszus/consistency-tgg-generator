@@ -21,7 +21,7 @@
         <configuration>
           <argLine>${surefireArgLine}</argLine>
           <deleteOsgiDataDirectory>true</deleteOsgiDataDirectory>
-   	  <useUIHarness>true</useUIHarness>
+          <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
           <product>org.eclipse.platform.ide</product>
           <testRuntime>default</testRuntime>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.peldszus.consistency.tgg.gen.feature_1.0.0.qualifier.jar" id="de.peldszus.consistency.tgg.gen.feature" version="1.0.0.qualifier">
+      <category name="de.peldszus.consistency.tgg.gen"/>
+   </feature>
+   <category-def name="de.peldszus.consistency.tgg.gen" label="Consistency TGG Generator"/>
+</site>
